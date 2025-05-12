@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next.js Todo List with Drizzle ORM and Neon PostgreSQL
+
+A modern, full-stack todo list application built with Next.js 15, Drizzle ORM, Neon PostgreSQL, and shadcn/ui components.
+
+## Features
+
+- Server Components and Server Actions for optimal performance
+- PostgreSQL database with Neon (serverless Postgres)
+- Type-safe database operations with Drizzle ORM
+- Modern UI components from shadcn
+- Optimistic updates for better UX
+- Loading states and skeleton UI
+- Form validation and error handling
+
+## Prerequisites
+
+- Node.js 18.17 or later
+- A Neon PostgreSQL database
+- npm or your preferred package manager
 
 ## Getting Started
 
-First, run the development server:
-
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd todolist-drizzle
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Create a Neon PostgreSQL database at https://neon.tech and get your connection string.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Update the database connection:
+   - In `src/db/index.ts`
+   - In `drizzle.config.ts`
+   Replace the connection strings with your Neon database URL:
+```typescript
+connectionString: "your-neon-database-url"
+```
 
-## Learn More
+5. Generate and run database migrations:
+```bash
+npm run db:generate
+npm run db:migrate
+```
 
-To learn more about Next.js, take a look at the following resources:
+6. Start the development server:
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+7. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Available Scripts
 
-## Deploy on Vercel
+- `npm run dev` - Start the development server
+- `npm run build` - Build the application for production
+- `npm run start` - Start the production server
+- `npm run lint` - Run ESLint
+- `npm run db:generate` - Generate database migrations
+- `npm run db:migrate` - Run database migrations
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Technology Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Next.js](https://nextjs.org/) - React framework
+- [Drizzle ORM](https://orm.drizzle.team/) - TypeScript ORM
+- [Neon](https://neon.tech/) - Serverless PostgreSQL
+- [shadcn/ui](https://ui.shadcn.com/) - UI components
+- [Tailwind CSS](https://tailwindcss.com/) - CSS framework
+- [TypeScript](https://www.typescriptlang.org/) - Type safety
+
+## Features in Detail
+
+### Database Schema
+
+The todo items are stored in a PostgreSQL table with the following schema:
+
+```typescript
+export const todos = pgTable("todos", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  completed: boolean("completed").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+```
+
+### Server Actions
+
+The application uses Next.js Server Actions for all CRUD operations:
+
+- `addTodo` - Create a new todo
+- `toggleTodo` - Toggle todo completion status
+- `deleteTodo` - Remove a todo
+- `getTodos` - Fetch all todos
+
+### Optimistic Updates
+
+The app implements optimistic updates for a better user experience:
+
+- Immediate UI updates when toggling todos
+- Loading states during server operations
+- Error handling with fallbacks
+
+## License
+
+This project is licensed under the [MIT License](LICENSE) - see the [LICENSE](LICENSE) file for details.
