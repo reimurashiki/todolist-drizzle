@@ -36,7 +36,7 @@ npm install
 4. Update the database connection:
    - In `src/db/index.ts`
    - In `drizzle.config.ts`
-   Replace the connection strings with your Neon database URL:
+   Replace the connection strings with your Neon database URL: (in the repo just an example)
 ```typescript
 connectionString: "your-neon-database-url"
 ```
